@@ -18,19 +18,13 @@ results/
 data/
 └── synthetical_payments.csv
 
-notebooks/
-│
-├── victor_guizien_martin_semrush_test.ipynb
-└── data_exploration.ipynb
-
 docs/
 │
 └──Data Scientist test task.pdf
 
-
+victor_guizien_martin_semrush_test.ipynb
+data_exploration.ipynb
 env.yml
-
-
 ```
 ## Explanation
 ### Configuration:
