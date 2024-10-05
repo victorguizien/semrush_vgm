@@ -22,8 +22,8 @@ docs/
 │
 └──Data Scientist test task.pdf
 
-victor_guizien_martin_semrush_test.ipynb
-data_exploration.ipynb
+notebook_model.ipynb
+notebook_data_exploration.ipynb
 env.yml
 ```
 ## Explanation
@@ -39,8 +39,8 @@ env.yml
     - `forescast.csv` with the tasked forecast
     - `executive_summary.pdf` a one page summary of the analisys and forecast
 ### notebooks
-- `victor_guizien_martin_semrush_test.ipynb` the notebook containing the key insights and the results of the forecast
-- `data_exploration.ipynb` a notebook with a lot of EDA and analysis done, mainly descriptive
+- `notebook_model.ipynb` the notebook containing the key insights and the results of the forecast
+- `notebook_data_exploration.ipynb` a notebook with a lot of EDA and analysis done, mainly descriptive
 
 
 <br>
