@@ -46,6 +46,10 @@ env.yml
 <br>
 
 ## To run the notebook and project
+### Clone project
+```
+git clone https://github.com/victorguizien/semrush_vgm.git
+```
 ### You will need an anaconda environment with using the provided env.yml file:
 ```
 conda env create --name XXXXXXXXXXXXXXXX --file=env.yml
