@@ -102,6 +102,8 @@ There is a lot covered on the notebook `data_exploration` which I didn't seem as
 ## 4. Future work
 On top of everything mentioned above, it goes without saying that more data always benefits the model. 
 
-More external variables such as marketing campaigns, the cost of capturing a client or even how did the user subbed all would probably help understand users better and thus help with the prediction of MRR.
+- More external variables such as marketing campaigns, the cost of capturing a client or even how did the user subbed all would probably help understand users better and thus help with the prediction of MRR.
 
-I would also fine-tune the models a bit more, as they are probably full of flaws as they are (either by not capturing some seasonality or over-fitting for example)
+- I would also fine-tune the models a bit more, as they are probably full of flaws as they are (either by not capturing some seasonality or over-fitting for example)
+
+- There is also code-optimization to be done, improve readability and refactor some pieces of code to better understand the process

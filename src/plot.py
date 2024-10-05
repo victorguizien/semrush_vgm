@@ -35,6 +35,35 @@ colors_pie_product = [color_dict_product[product] for product in product_order]
 def plot_compare(df_active_users, df_transactions, df_amount, x_col, hue_col, title='',
                  hue_order=None, hue_color_dict=None, b_detail_period=False,
                  figsize=(15, 3), dpi=100):
+    """
+    Create a comparison plot with three subplots: Transactions, Active Subscriptions, and MRR.
+
+    Parameters:
+    df_active_users (pd.DataFrame): DataFrame containing active users data
+    df_transactions (pd.DataFrame): DataFrame containing transaction data
+    df_amount (pd.DataFrame): DataFrame containing amount (MRR) data
+    x_col (str): Column name for x-axis values
+    hue_col (str): Column name for grouping data (used for color-coding)
+    title (str, optional): Suptitle for the entire figure. Defaults to ''.
+    hue_order (list, optional): Order of hue categories. Defaults to None.
+    hue_color_dict (dict, optional): Dictionary mapping hue categories to colors. Defaults to None.
+    b_detail_period (bool, optional): If True, plot separate lines for monthly and annual data. Defaults to False.
+    figsize (tuple, optional): Figure size (width, height) in inches. Defaults to (15, 3).
+    dpi (int, optional): Dots per inch for the figure. Defaults to 100.
+
+    Returns:
+    None: Displays the plot using plt.show()
+
+    Description:
+    This function creates a figure with three subplots:
+    1. Transactions over time
+    2. Count of active subscriptions over time
+    3. Monthly Recurring Revenue (MRR) over time
+
+    Each subplot uses the same x-axis and hue grouping. If b_detail_period is True,
+    it differentiates between monthly and annual data using solid and dashed lines.
+    The function also creates a custom legend combining hue categories and period types (if applicable).
+    """
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=figsize, dpi=dpi)
 
     if hue_order is None:
@@ -115,6 +144,22 @@ def plot_compare(df_active_users, df_transactions, df_amount, x_col, hue_col, ti
 
 
 def format_ax_date(ax):
+    """
+    Format the x-axis of a matplotlib Axes object for date display.
+
+    Parameters:
+    ax (matplotlib.axes.Axes): The Axes object to be formatted.
+
+    Returns:
+    matplotlib.axes.Axes: The formatted Axes object.
+
+    Description:
+    This function applies date formatting to the x-axis of the given Axes object:
+    - Sets major ticks to years, labeled as '\\nYYYY'
+    - Sets minor ticks to months, labeled as 'MM'
+    - Adds major grid lines (solid) and minor grid lines (dotted)
+    - Configures grid line styles and colors
+    """
     ax.xaxis.set_major_locator(mdates.YearLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('\n%Y'))
     ax.xaxis.set_minor_locator(mdates.MonthLocator())
@@ -126,11 +171,34 @@ def format_ax_date(ax):
 
 
 def custom_sort(row):
+    """
+    Custom sorting function for DataFrame rows based on billing country and product.
+
+    Parameters:
+    row (pandas.Series): A row from a DataFrame containing 'billingCountry' and 'product' columns.
+
+    Returns:
+    tuple: A tuple of two integers representing the sort order for the row.
+    """
     return (country_order_dict.get(row['billingCountry'], len(country_order)),
             product_order_dict.get(row['product'], len(product_order)))
 
 
 def get_contrasting_color_pie(bg_color):
+    """
+    Determine a contrasting text color (black or white) for a given background color in a pie chart.
+
+    Parameters:
+    bg_color (tuple or str): The background color. If tuple, it should be (r, g, b) values between 0 and 1.
+                             If string, it should be a color name or hex code.
+
+    Returns:
+    str: Either 'black' or 'white', whichever provides better contrast with the background.
+
+    Description:
+    This function calculates the luminance of the given background color and returns
+    'black' for light backgrounds and 'white' for dark backgrounds, ensuring readable text in pie charts.
+    """
     # get contrasting color for pie chart
     r, g, b = bg_color[:3]
     luminance = (0.299 * r + 0.587 * g + 0.114 * b)
@@ -138,13 +206,45 @@ def get_contrasting_color_pie(bg_color):
 
 
 def get_contrasting_color_bar(bg_color):
-    # get contrasting color for bar
+    """
+    Determine a contrasting text color (black or white) for a given background color in a bar chart.
+
+    Parameters:
+    bg_color (str): The background color name or hex code.
+
+    Returns:
+    str: Either 'white' or 'black', whichever provides better contrast with the background.
+
+    Description:
+    This function converts the given color to RGB, calculates its brightness,
+    and returns 'white' for dark backgrounds and 'black' for light backgrounds.
+    This ensures readable text labels on bar charts regardless of the bar color.
+    """
+    # Get contrasting color for bar
     rgb = plt.cm.colors.to_rgb(bg_color)
     brightness = np.sqrt(0.299 * rgb[0]**2 + 0.587 * rgb[1]**2 + 0.114 * rgb[2]**2)
     return 'white' if brightness < 0.5 else 'black'
 
 
 def plot_anual_vs_monthly_by_product(df, df_transactions, year, product_order, color_dict_product):
+    """
+    Create a 2x3 grid of plots comparing annual and monthly data for transactions, active users, and revenue.
+
+    Parameters:
+    df (pd.DataFrame): DataFrame containing user and revenue data
+    df_transactions (pd.DataFrame): DataFrame containing transaction data
+    year (int): Year to filter the data
+    product_order (list): Order of products for consistent plotting
+    color_dict_product (dict): Mapping of products to colors
+
+    Returns:
+    None: Displays the plot using plt.show()
+
+    Description:
+    Generates six subplots: annual and monthly views for transactions, active users, and revenue.
+    Uses line plots with different line styles for annual (solid) and monthly (dashed) data.
+    Includes a shared legend for products and a suptitle indicating the year of comparison.
+    """
     fig, axs = plt.subplots(2, 3, figsize=(15, 6), dpi=100)
 
     plot_configs = [
@@ -190,6 +290,22 @@ def plot_anual_vs_monthly_by_product(df, df_transactions, year, product_order, c
 
 
 def plot_simple_pie_chart(counts, title='', color_palette=None):
+    """
+    Create a simple pie chart with contrasting text colors.
+
+    Parameters:
+    counts (pd.Series or dict): Data to plot, with labels as index/keys and values as counts
+    title (str, optional): Title for the pie chart. Defaults to ''.
+    color_palette (list, optional): Custom color palette. If None, uses a cubehelix palette.
+
+    Returns:
+    None: Displays the plot using plt.show()
+
+    Description:
+    Generates a pie chart with percentage labels. Automatically adjusts text color
+    for readability based on the background color of each wedge. Uses either a
+    custom color palette or a default cubehelix palette.
+    """
     n = len(counts)
 
     if not color_palette:
@@ -211,6 +327,19 @@ def plot_simple_pie_chart(counts, title='', color_palette=None):
 
 
 def plot_single_baseline_pred(baseline_predictions, baseline_future_predictions, product, palette=palette, b_plot_ci=False):
+    """
+    Plot actual data, historical predictions, and future predictions for a single product.
+
+    Parameters:
+    baseline_predictions (dict): Historical predictions for the product.
+    baseline_future_predictions (dict): Future predictions for the product.
+    product (str): Name of the product to plot.
+    palette (list): Color palette for the plot.
+    b_plot_ci (bool): Whether to plot confidence intervals.
+
+    Returns:
+    None: Displays the plot.
+    """
     fig, ax = plt.subplots(figsize=(14, 6))
 
     # Create a date range for the x-axis
@@ -252,12 +381,34 @@ def plot_single_baseline_pred(baseline_predictions, baseline_future_predictions,
 
 
 def plot_baseline_predictions(baseline_predictions, baseline_future_predictions, product_order, palette=palette):
+    """
+    Plot predictions for multiple products in the specified order.
+
+    Parameters:
+    baseline_predictions (dict): Historical predictions for all products.
+    baseline_future_predictions (dict): Future predictions for all products.
+    product_order (list): Order in which to plot the products.
+    palette (list): Color palette for the plots.
+
+    Returns:
+    None: Displays plots for each product.
+    """
     for product in product_order:
         plot_single_baseline_pred(baseline_predictions, baseline_future_predictions, product, palette=palette)
 
 
 def plot_single_sarima_pred(sarima_observed, sarima_forecast, product):
+    """
+    Plot observed data and SARIMA forecast for a single product.
 
+    Parameters:
+    sarima_observed (dict): Observed data for all products.
+    sarima_forecast (dict): SARIMA forecast data for all products.
+    product (str): Name of the product to plot.
+
+    Returns:
+    None: Displays the plot.
+    """
     data = sarima_observed[product]
     dict_forecast = sarima_forecast[product]
 
@@ -283,11 +434,31 @@ def plot_single_sarima_pred(sarima_observed, sarima_forecast, product):
 
 
 def plot_sarima_predictions(sarima_observed, sarima_forecasts):
+    """
+    Plot SARIMA predictions for multiple products.
+
+    Parameters:
+    sarima_observed (dict): Observed data for all products.
+    sarima_forecasts (dict): SARIMA forecast data for all products.
+
+    Returns:
+    None: Displays plots for each product in the global product_order.
+    """
     for product in product_order:
         plot_single_sarima_pred(sarima_observed, sarima_forecasts, product)
 
 
 def plot_prophet_predictions(prophet_data, prophet_forecasts):
+    """
+    Plot Prophet predictions for multiple products.
+
+    Parameters:
+    prophet_data (dict): Historical data used for Prophet models, keyed by product.
+    prophet_forecasts (dict): Prophet forecast results, keyed by product.
+
+    Returns:
+    None: Displays a single figure with subplots for each product's forecast.
+    """
     plt.figure(figsize=(15, 5 * len(prophet_data)))
 
     for i, (product, forecast) in enumerate(prophet_forecasts.items(), 1):

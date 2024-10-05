@@ -12,6 +12,22 @@ data_path = os.getenv('DATA_PATH')
 
 
 def load_and_clean():
+    """
+    Load and clean transaction data from a CSV file.
+
+    The function performs the following operations:
+    - Loads data from 'synthetical_payments.csv'
+    - Converts transaction times to datetime
+    - Removes data from 2018 onwards
+    - Eliminates transactions with amounts >= 10000
+    - Removes duplicate transactions
+    - Expands annual subscriptions into monthly data
+
+    Returns:
+    tuple: (cleaned DataFrame with monthly data, original transaction DataFrame)
+           Returns (None, None) if the file doesn't exist.
+    """
+
     print("Loading and cleaning data..")
 
     file_path = f'{data_path}/synthetical_payments.csv'

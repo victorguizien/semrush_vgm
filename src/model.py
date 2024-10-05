@@ -11,20 +11,58 @@ from src.plot import product_order
 
 
 def calculate_metrics(actual, predicted):
+    """
+    Calculate Mean Absolute Error (MAE) and Root Mean Square Error (RMSE).
+
+    Parameters:
+    actual (array-like): Actual values
+    predicted (array-like): Predicted values
+
+    Returns:
+    tuple: (MAE, RMSE)
+    """
     mae = mean_absolute_error(actual, predicted)
     rmse = np.sqrt(mean_squared_error(actual, predicted))
     return mae, rmse
 
 
 def naive_forecast(data):
+    """
+    Generate a naive forecast by using the last observed value.
+
+    Parameters:
+    data (pd.Series): Time series data
+
+    Returns:
+    pd.Series: Naive forecast
+    """
     return pd.Series([data.iloc[-1]] * len(data), index=data.index)
 
 
 def simple_average_forecast(data):
+    """
+    Generate a forecast using the mean of all historical values.
+
+    Parameters:
+    data (pd.Series): Time series data
+
+    Returns:
+    pd.Series: Simple average forecast
+    """
     return pd.Series([data.mean()] * len(data), index=data.index)
 
 
 def seasonal_naive_forecast(data, season_length=12):
+    """
+    Generate a seasonal naive forecast.
+
+    Parameters:
+    data (pd.Series): Time series data
+    season_length (int): Length of the seasonal cycle
+
+    Returns:
+    pd.Series: Seasonal naive forecast
+    """
     result = data.copy()
     for i in range(season_length, len(data)):
         result.iloc[i] = data.iloc[i - season_length]
@@ -32,10 +70,34 @@ def seasonal_naive_forecast(data, season_length=12):
 
 
 def simple_moving_average(data, window=3):
+    """
+    Calculate simple moving average.
+
+    Parameters:
+    data (pd.Series): Time series data
+    window (int): Size of the moving window
+
+    Returns:
+    pd.Series: Simple moving average
+    """
     return data.rolling(window=window, min_periods=1).mean()
 
 
 def naive_forecast_with_ci(data, forecast_horizon=3, confidence=0.95):
+    """
+    Generate naive forecast with confidence intervals based on historical volatility.
+
+    Parameters:
+    data (pd.Series): Time series data
+    forecast_horizon (int): Number of periods to forecast
+    confidence (float): Confidence level for intervals (0 to 1)
+
+    Returns:
+    tuple: (forecasts, lower_ci, upper_ci)
+        forecasts (list): Point forecasts
+        lower_ci (list): Lower bounds of confidence intervals
+        upper_ci (list): Upper bounds of confidence intervals
+    """
     last_value = data.iloc[-1]
     forecasts = [last_value] * forecast_horizon
 
@@ -52,6 +114,20 @@ def naive_forecast_with_ci(data, forecast_horizon=3, confidence=0.95):
 
 
 def simple_average_forecast_with_ci(data, forecast_horizon=3, confidence=0.95):
+    """
+    Generate simple average forecast with confidence intervals.
+
+    Parameters:
+    data (pd.Series): Time series data
+    forecast_horizon (int): Number of periods to forecast
+    confidence (float): Confidence level for intervals (0 to 1)
+
+    Returns:
+    tuple: (forecasts, lower_ci, upper_ci)
+        forecasts (list): Point forecasts (mean of historical data)
+        lower_ci (list): Lower bounds of confidence intervals
+        upper_ci (list): Upper bounds of confidence intervals
+    """
     mean = np.mean(data)
     forecasts = [mean] * forecast_horizon
 
@@ -67,6 +143,20 @@ def simple_average_forecast_with_ci(data, forecast_horizon=3, confidence=0.95):
 
 
 def seasonal_naive_forecast_with_ci(data, forecast_horizon=3, confidence=0.95):
+    """
+    Generate seasonal naive forecast with confidence intervals.
+
+    Parameters:
+    data (pd.Series): Time series data (assumed to be monthly)
+    forecast_horizon (int): Number of periods to forecast
+    confidence (float): Confidence level for intervals (0 to 1)
+
+    Returns:
+    tuple: (forecasts, lower_ci, upper_ci)
+        forecasts (list): Seasonal naive point forecasts
+        lower_ci (list): Lower bounds of confidence intervals
+        upper_ci (list): Upper bounds of confidence intervals
+    """
     # Assuming monthly data
     season_length = 12
     forecasts = data[-season_length:-season_length + forecast_horizon]
@@ -85,6 +175,21 @@ def seasonal_naive_forecast_with_ci(data, forecast_horizon=3, confidence=0.95):
 
 
 def simple_moving_average_forecast_with_ci(data, forecast_horizon=3, window_size=3, confidence=0.95):
+    """
+    Generate simple moving average forecast with confidence intervals.
+
+    Parameters:
+    data (pd.Series): Time series data
+    forecast_horizon (int): Number of periods to forecast
+    window_size (int): Size of the moving average window
+    confidence (float): Confidence level for intervals (0 to 1)
+
+    Returns:
+    tuple: (forecasts, lower_ci, upper_ci)
+        forecasts (list): Simple moving average point forecasts
+        lower_ci (list): Lower bounds of confidence intervals
+        upper_ci (list): Upper bounds of confidence intervals
+    """
     forecasts = []
     lower_ci = []
     upper_ci = []
@@ -109,6 +214,26 @@ def simple_moving_average_forecast_with_ci(data, forecast_horizon=3, window_size
 
 
 def get_baseline_predictions(mrr_monthly):
+    """
+    Calculate baseline predictions and metrics for multiple forecasting methods.
+
+    This function computes predictions, performance metrics, and future forecasts
+    with confidence intervals for four baseline methods: Naive, Simple Average,
+    Seasonal Naive, and Simple Moving Average.
+
+    Parameters:
+    mrr_monthly (dict): Monthly MRR data for each product
+
+    Returns:
+    tuple: (baseline_metrics, baseline_predictions, baseline_future_predictions)
+        baseline_metrics (dict): MAE and RMSE for each method and product
+        baseline_predictions (dict): Historical predictions for each method and product
+        baseline_future_predictions (dict): Future predictions with confidence intervals
+                                            for each method and product
+
+    Note:
+    The function uses a global 'product_order' list to determine which products to process.
+    """
     print("Calculating baseline predictions..")
 
     baseline_metrics = {}
@@ -167,6 +292,23 @@ def get_baseline_predictions(mrr_monthly):
 
 
 def display_baseline_metrics_and_predictions(baseline_metrics, baseline_future_predictions):
+    """
+    Display baseline metrics and future predictions for each product.
+
+    This function prints the MAE and RMSE for each baseline model, as well as
+    future predictions with 95% confidence intervals for each product.
+
+    Parameters:
+    baseline_metrics (dict): MAE and RMSE for each method and product
+    baseline_future_predictions (dict): Future predictions with confidence intervals
+                                        for each method and product
+
+    Returns:
+    None: This function prints output to the console
+
+    Note:
+    The function uses a global 'product_order' list to determine which products to display.
+    """
     for product in product_order:
         print(f"\nMetrics and Predictions for {product}:")
 
@@ -193,6 +335,20 @@ def display_baseline_metrics_and_predictions(baseline_metrics, baseline_future_p
 # ARIMA
 
 def auto_arima_optimization(data):
+    """
+    Perform automatic ARIMA model selection using auto_arima.
+
+    This function uses the auto_arima algorithm to find the best ARIMA
+    model parameters for the given time series data.
+
+    Parameters:
+    data (pd.Series): Time series data
+
+    Returns:
+    tuple: (order, seasonal_order)
+        order (tuple): Non-seasonal ARIMA order (p,d,q)
+        seasonal_order (tuple): Seasonal ARIMA order (P,D,Q,m)
+    """
     model = auto_arima(data, seasonal=True, m=12, start_p=0, start_q=0, max_p=2, max_q=2,
                        start_P=0, start_Q=0, max_P=1, max_Q=1, D=1, max_D=1,
                        trace=True, error_action='ignore', suppress_warnings=True, stepwise=True)
@@ -200,12 +356,40 @@ def auto_arima_optimization(data):
 
 
 def analyze_seasonality(data):
+    """
+    Perform seasonal decomposition and calculate seasonal strength.
+
+    This function decomposes the time series into trend, seasonal, and
+    residual components, and calculates the strength of seasonality.
+
+    Parameters:
+    data (pd.Series): Time series data
+
+    Returns:
+    tuple: (decomposition, seasonal_strength)
+        decomposition (DecomposeResult): Seasonal decomposition result
+        seasonal_strength (float): Measure of seasonality strength (0 to 1)
+    """
     decomposition = seasonal_decompose(data, model='additive', period=12)
     seasonal_strength = 1 - np.var(decomposition.resid) / np.var(decomposition.observed - decomposition.trend)
     return decomposition, seasonal_strength
 
 
 def forecast_with_ci(model, steps=3, alpha=0.05):
+    """
+    Generate forecasts with confidence intervals for a fitted SARIMA model.
+
+    Parameters:
+    model (SARIMAXResultsWrapper): Fitted SARIMA model
+    steps (int): Number of steps to forecast
+    alpha (float): Significance level for confidence intervals (default: 0.05 for 95% CI)
+
+    Returns:
+    dict: 
+        'forecast': List of point forecasts
+        'lower_ci': List of lower bounds of confidence intervals
+        'upper_ci': List of upper bounds of confidence intervals
+    """
     forecast = model.get_forecast(steps=steps)
     mean_forecast = forecast.predicted_mean.tolist()
     confidence_int = forecast.conf_int(alpha=alpha)
@@ -221,12 +405,46 @@ def forecast_with_ci(model, steps=3, alpha=0.05):
 
 
 def create_sarima_model(data, order, seasonal_order):
+    """
+    Create and fit a SARIMA model with specified parameters.
+
+    Parameters:
+    data (pd.Series): Time series data
+    order (tuple): Non-seasonal ARIMA order (p,d,q)
+    seasonal_order (tuple): Seasonal ARIMA order (P,D,Q,m)
+
+    Returns:
+    SARIMAXResultsWrapper: Fitted SARIMA model
+    """
     model = SARIMAX(data, order=order, seasonal_order=seasonal_order)
     results = model.fit()
     return results
 
 
 def get_sarima_predictions(mrr_monthly):
+    """
+    Perform SARIMA modeling and forecasting for multiple products.
+
+    This function performs the following steps for each product:
+    1. Optimizes SARIMA parameters using auto_arima
+    2. Analyzes seasonality
+    3. Fits a SARIMA model
+    4. Calculates performance metrics (MAE, RMSE, AIC)
+    5. Generates forecasts with confidence intervals
+
+    Parameters:
+    mrr_monthly (pd.DataFrame): Monthly MRR data for multiple products
+
+    Returns:
+    tuple: (sarima_metrics, sarima_forecasts, sarima_observed)
+        sarima_metrics (dict): Performance metrics for each product
+        sarima_forecasts (dict): Forecasts with confidence intervals for each product
+        sarima_observed (dict): Original observed data for each product
+
+    Note:
+    The function prints progress and results to the console during execution.
+    It handles exceptions that may occur during model fitting.
+    """
     sarima_metrics = {}
     sarima_forecasts = {}
     sarima_observed = {}
@@ -272,6 +490,24 @@ def get_sarima_predictions(mrr_monthly):
 
 
 def display_sarima_metrics_and_predictions(sarima_metrics, sarima_forecasts, mrr_monthly):
+    """
+    Display SARIMA model metrics and forecasts for multiple products.
+
+    This function prints:
+    1. SARIMA metrics (MAE, RMSE, AIC) for each product
+    2. Three-month forecasts with 95% confidence intervals for each product
+
+    Parameters:
+    sarima_metrics (dict): Performance metrics for each product
+    sarima_forecasts (dict): Forecasts with confidence intervals for each product
+    mrr_monthly (pd.DataFrame): Original monthly MRR data used for date referencing
+
+    Returns:
+    None: This function prints output to the console
+
+    Note:
+    Forecast dates are generated based on the last date in mrr_monthly.
+    """
     # Print SARIMA metrics
     for product, metrics in sarima_metrics.items():
         print(f"\nSARIMA metrics for {product}:")
@@ -295,6 +531,16 @@ def display_sarima_metrics_and_predictions(sarima_metrics, sarima_forecasts, mrr
 # PROPHET
 
 def calculate_prophet_metrics(model, actual_data):
+    """
+    Calculate MAE and RMSE for a fitted Prophet model.
+
+    Parameters:
+    model (Prophet): Fitted Prophet model
+    actual_data (pd.DataFrame): DataFrame with 'ds' and 'y' columns
+
+    Returns:
+    tuple: (MAE, RMSE)
+    """
     forecast = model.predict(actual_data)
     mae = mean_absolute_error(actual_data['y'], forecast['yhat'])
     rmse = np.sqrt(mean_squared_error(actual_data['y'], forecast['yhat']))
@@ -302,6 +548,18 @@ def calculate_prophet_metrics(model, actual_data):
 
 
 def get_prophet_predictions(mrr_monthly):
+    """
+    Fit Prophet models and generate predictions for multiple products.
+
+    Parameters:
+    mrr_monthly (pd.DataFrame): Monthly MRR data for multiple products
+
+    Returns:
+    tuple: (prophet_data, prophet_metrics, prophet_forecasts)
+        prophet_data (dict): Reformatted data for Prophet for each product
+        prophet_metrics (dict): MAE and RMSE for each product's model
+        prophet_forecasts (dict): Prophet forecasts for each product
+    """
     prophet_data = {}
 
     for product in mrr_monthly.columns[1:]:
@@ -325,6 +583,20 @@ def get_prophet_predictions(mrr_monthly):
 
 
 def display_metrics_and_predictions(prophet_metrics, prophet_forecasts):
+    """
+    Display Prophet model metrics and forecasts for multiple products.
+
+    This function prints:
+    1. MAE and RMSE for each product's Prophet model
+    2. Three-month forecasts with 95% confidence intervals for each product
+
+    Parameters:
+    prophet_metrics (dict): MAE and RMSE for each product's model
+    prophet_forecasts (dict): Prophet forecasts for each product
+
+    Returns:
+    None: This function prints output to the console
+    """
     for product, metrics in prophet_metrics.items():
         print(f"\nMetrics for {product}:")
         print(f"MAE: {metrics['MAE']}")
@@ -339,6 +611,20 @@ def display_metrics_and_predictions(prophet_metrics, prophet_forecasts):
 
 # ------------------------------------------------------------------------------------------------------------------------
 def get_comparative_metrics(baseline_metrics, sarima_metrics, prophet_metrics):
+    """
+    Compile comparative metrics for all models across all products.
+
+    Parameters:
+    baseline_metrics (dict): Metrics for baseline models
+    sarima_metrics (dict): Metrics for SARIMA models
+    prophet_metrics (dict): Metrics for Prophet models
+
+    Returns:
+    pd.DataFrame: DataFrame with multi-index (Product, Model) containing MAE, RMSE, and AIC (where applicable)
+
+    Note:
+    Uses a global 'product_order' list to determine which products to include.
+    """
     data = []
 
     # Populate the data list
@@ -379,6 +665,21 @@ def get_comparative_metrics(baseline_metrics, sarima_metrics, prophet_metrics):
 
 
 def get_comparative_forecasts(baseline_future_predictions, prophet_forecasts, sarima_forecasts):
+    """
+    Compile comparative forecasts for all models across all products.
+
+    Parameters:
+    baseline_future_predictions (dict): Future predictions for baseline models
+    prophet_forecasts (dict): Forecasts from Prophet models
+    sarima_forecasts (dict): Forecasts from SARIMA models
+
+    Returns:
+    pd.DataFrame: DataFrame with multi-index (Product, Model, Month) containing forecasts and confidence intervals
+
+    Note:
+    Uses a global 'product_order' list to determine which products to include.
+    Includes 3-month forecasts for each model.
+    """
     data = []
 
     for product in product_order:
