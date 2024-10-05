@@ -1,0 +1,41 @@
+{
+    "json.schemaDownload.enable": true,
+    "workbench.list.mouseWheelScrollSensitivity": 5,
+    "python.terminal.executeInFileDir": true,
+    "terminal.integrated.env.windows":
+    {
+           "PYTHONPATH": "${workspaceFolder}"
+    },
+    "sshfs.configs": [
+        {
+            "name": "Server"
+        }
+    ],
+    "outline.showVariables": false,
+    "snippets.viewer.combineLanguageSnippets": true,
+    "snippets.viewer.showBuiltInExtensionSnippets": false,
+    "notebook.output.textLineLimit": 300,
+    "notebook.output.wordWrap": true,
+    "notebook.output.scrolling": true,
+    "jupyter.askForKernelRestart": false,
+    "flake8.args": [
+        "--ignore=E501, F541, E203, E402, E128, W503, W504, E712"
+    ],
+    "outline.showArrays": false,
+    "outline.showBooleans": false,
+    "outline.showConstants": false,
+    "outline.showEnumMembers": false,
+    "outline.showEnums": false,
+    "outline.showEvents": false,
+    "outline.showFields": false,
+    "outline.showNumbers": false,
+    "outline.showObjects": false,
+    "outline.showTypeParameters": false,
+    "outline.showStructs": false,
+    "outline.showStrings": false,
+    "outline.showOperators": false,
+    "outline.showProperties": false,
+    "outline.showNull": false,
+    "outline.showNamespaces": false,
+    "outline.showModules": false,
+}
