@@ -11,28 +11,45 @@ src/
 └── processing.py
 
 results/
+│
 ├── forecast.csv
+└── executuve_summary.pdf
 
 data/
-├── synthetical_payments.csv
+└── synthetical_payments.csv
+
+notebooks/
+│
+├── victor_guizien_martin_semrush_test.ipynb
+└── data_exploration.ipynb
+
+docs/
+│
+└──Data Scientist test task.pdf
+
 
 env.yml
 
-victor_guizien_martin_semrush_test.ipynb
-Data Scientist test task.pdf
 
 ```
 ## Explanation
-1. `confg/.env` specifies in which folder the .csv file is located
-2. `loader.py` loads and cleans the csv file
-3. `model.py` contains the necessary functions to make predictions
-4. `processing.py` contains functions to transform data
-5. `results/forecast.csv` contains the asked forescast
-6. `env.yml` conda environment to reproduce the results
+### Configuration:
+- `confg/.env` specifies in which folder the .csv file is located
+### Code:
+- `loader.py` loads and cleans the csv file
+- `model.py` contains the necessary functions to make predictions
+- `plot.py` contains re-used plots to ease readability
+- `processing.py` contains functions to transform data
+### Results
+- `results` contains two files:
+    - `forescast.csv` with the tasked forecast
+    - `executive_summary.pdf` a one page summary of the analisys and forecast
+### notebooks
+- `victor_guizien_martin_semrush_test.ipynb` the notebook containing the key insights and the results of the forecast
+- `data_exploration.ipynb` a notebook with a lot of EDA and analysis done, mainly descriptive
+
 
 <br>
-
-> **All development is in the notebook `victor_guizien_martin_semrush_test`**
 
 ## To run the notebook and project
 ### You will need an anaconda environment with using the provided env.yml file:
@@ -74,7 +91,7 @@ There is a lot covered on the notebook `data_exploration` which I didn't seem as
 - I considered substituing the last month of India's data (PRO Monthly) with some MA or similar, due to the **very** unsual spike in subs, but who knows? 
 
     Maybe there was some crazy targeted marketing campaign and it ended up paying off big time.
-    ![alt text](image.png)
+    ![alt text](.github/images/image.png)
 
 #### There are a lot of unanswered questions such as:
 - Do users that un-sub pay more that the price that is current?
