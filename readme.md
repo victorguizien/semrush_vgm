@@ -38,11 +38,12 @@ env.yml
 - `results` contains two files:
     - `forescast.csv` with the tasked forecast
     - `executive_summary.pdf` a one page summary of the analisys and forecast
-### notebooks
-- `notebook_model.ipynb` the notebook containing the key insights and the results of the forecast
-- `notebook_data_exploration.ipynb` a notebook with a lot of EDA and analysis done, mainly descriptive
 
+<br>
 
+`notebook_model.ipynb` the notebook containing the key insights and the results of the forecast
+
+`notebook_data_exploration.ipynb` a notebook with a lot of EDA and analysis done, mainly descriptive
 <br>
 
 ## To run the notebook and project
