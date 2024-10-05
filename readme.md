@@ -79,7 +79,7 @@ There is a lot covered on the notebook `data_exploration` which I didn't seem as
 
 - In this part of the task I got a better understanding at how the products evolved throughout the years, and got the intuition behind what we could expect from the forecasting.
 
-- As explained in the notebook (victor_guizien_martin_semrush_test), the main issue we can foresee is the deep dive in transactions both anual and monthly in GURU products which could lead to a significant drop in MRR in the next months.
+- As explained in the notebook (`notebook_model`), the main issue we can see is the deep dive in transactions both anual and monthly in GURU products which could lead to a significant drop in MRR in the next months.
 
 - This change in transactions (and thus active subscriptions) is very rapid, while the MRR has certain inertia from the anual subscribers. This means it is not directly impacted, making it harder for the models to capture this changes.
 
